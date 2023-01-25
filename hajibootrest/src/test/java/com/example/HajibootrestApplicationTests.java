@@ -51,7 +51,7 @@ public class HajibootrestApplicationTests {
 		customer2.setFirstName("Ichiro");
 		customer2.setLastName("Suzuki");
 
-		customerRepository.save(Arrays.asList(customer1, customer2));
+		customerRepository.saveAllAndFlush(Arrays.asList(customer1, customer2));
 	}
 	@Test
 	public void testGetCustomers() throws Exception {
