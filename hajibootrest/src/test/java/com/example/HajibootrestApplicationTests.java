@@ -7,12 +7,12 @@ import lombok.Data;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import  org.junit.runner.RunWith;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import  org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
+//import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -20,10 +20,8 @@ import  org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+//import java.lang.reflect.ParameterizedType;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -34,8 +32,8 @@ public class HajibootrestApplicationTests {
 	CustomerRepository customerRepository;
 	@Autowired
 	TestRestTemplate restTemplate;
-	Customer customer1
-	Customer customer2
+	Customer customer1;
+	Customer customer2;
 
 	@Data
 	@JsonIgnoreProperties(ignoreUnknown = true)
@@ -47,10 +45,10 @@ public class HajibootrestApplicationTests {
 	public void setUp() {
 		customerRepository.deleteAll();
 		customer1 = new Customer();
-		customer1.getFirstName("Taro");
+		customer1.setFirstName("Taro");
 		customer1.setLastName("Yamada");
 		customer2 = new Customer();
-		customer2.getFirstName("Ichiro");
+		customer2.setFirstName("Ichiro");
 		customer2.setLastName("Suzuki");
 
 		customerRepository.save(Arrays.asList(customer1, customer2));
@@ -59,7 +57,8 @@ public class HajibootrestApplicationTests {
 	public void testGetCustomers() throws Exception {
 		ResponseEntity<Page<Customer>> response = restTemplate.exchange(
 				"/api/customers", HttpMethod.GET, null,
-				new ParameterizedTypeReference<Page<Customer>>() {});
+				new ParameterizedTypeReference<>() {
+				});
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody().getNumberOfElements()).isEqualTo(2);
 
@@ -76,16 +75,16 @@ public class HajibootrestApplicationTests {
 	@Test
 	public void testPostCustomers() throws Exception {
 		Customer customer3 = new Customer();
-		customer3.getFirstName("Nobita");
+		customer3.setFirstName("Nobita");
 		customer3.setLastName("Nobi");
 
 		ResponseEntity<Customer> response = restTemplate.exchange(
 				"/api/customers",HttpMethod.POST, new HttpEntity<Object>(customer3), Customer.class);
 				assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 				Customer customer = response.getBody();
-				assertThat(customer.getId()).isNotNull();
+				assertThat(Objects.requireNonNull(customer).getId()).isNotNull();
 				assertThat(customer.getFirstName().equals(customer3.getFirstName()));
-				assertThat(customer.getLastName().equals(customer3.getLastName());
+				assertThat(customer.getLastName().equals(customer3.getLastName()));
 
 				assertThat(restTemplate.exchange(
 					"/api/customers", HttpMethod.GET, null,
